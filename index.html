@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Strong Legs, Calm Back</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F2FF; --surface:#FFFFFF; --surface-2:#F3F0FB; --ink:#211A3B; --muted:#6D6689; --line:#E6E0F5;
+  --primary:#5B3FD6; --primary-ink:#FFFFFF; --coral:#FF6B4A; --mint:#16B29A; --sun:#FFB22E; --pink:#FF5C93;
+  --warn:#C43D2B; --warn-soft:#FFE9E4; --shadow:0 8px 24px rgba(60,40,140,.08);
+  --skin:#F1B48C; --skinD:#D38F68; --legs:#34286E; --legsD:#221A4E; --hair:#2A1C1C; --shoe:#1D1A2C;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#110D1F; --surface:#1C1631; --surface-2:#251E3E; --ink:#F1EDFF; --muted:#A8A1C4; --line:#2F2750;
+  --primary:#8C73FF; --primary-ink:#130D26; --warn:#FF8C77; --warn-soft:#3A1E1B; --shadow:none;
+  --legs:#5A4AB0; --legsD:#3E3290; --shoe:#0B0914;
+}}
+:root[data-theme="dark"]{
+  --bg:#110D1F; --surface:#1C1631; --surface-2:#251E3E; --ink:#F1EDFF; --muted:#A8A1C4; --line:#2F2750;
+  --primary:#8C73FF; --primary-ink:#130D26; --warn:#FF8C77; --warn-soft:#3A1E1B; --shadow:none;
+  --legs:#5A4AB0; --legsD:#3E3290; --shoe:#0B0914;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 "Figtree",-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+h1,h2,h3{font-family:"Bricolage Grotesque","Figtree",-apple-system,sans-serif;line-height:1.12;margin:0}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;border:0}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+button:active{transform:scale(.97)}
+.wrap{max-width:520px;margin:0 auto;padding:12px 16px calc(110px + env(safe-area-inset-bottom,0px))}
+.panel[hidden],.viewing[hidden]{display:none}
+.muted{color:var(--muted)}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;border-radius:28px;padding:20px 18px 16px;color:#fff;margin-bottom:14px;
+  background:radial-gradient(120% 90% at 100% 0%,#FF7A9A 0%,rgba(255,122,154,0) 55%),linear-gradient(145deg,#4A2FC7 0%,#7B45E0 60%,#B24FD6 100%)}
+.hero.food{background:radial-gradient(120% 90% at 100% 0%,#FFD166 0%,rgba(255,209,102,0) 55%),linear-gradient(145deg,#FF5A4A 0%,#FF7B45 55%,#FF9F3D 100%)}
+.hero::after{content:"";position:absolute;right:-40px;bottom:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.10)}
+.hi{font-size:15px;opacity:.9;font-weight:600}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:-.01em;margin:2px 0 14px}
+.hero-row{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
+.ring{flex:none}
+.ring circle{fill:none;stroke-width:10}
+.ring .tr{stroke:rgba(255,255,255,.22)}
+.ring .v{stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .6s cubic-bezier(.3,.7,.3,1)}
+.ring text{fill:#fff;font:800 22px "Bricolage Grotesque",sans-serif;text-anchor:middle}
+.ring .sm{font:600 11px "Figtree",sans-serif;opacity:.85}
+.hero-stats{display:grid;gap:8px;flex:1}
+.hs{background:rgba(255,255,255,.16);border-radius:14px;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600}
+.hs b{font-size:17px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:14px;position:relative;z-index:1}
+.dayc{background:rgba(255,255,255,.14);color:#fff;border-radius:14px;padding:6px 0 5px;display:grid;gap:1px;justify-items:center}
+.dayc .wd{font-size:11px;opacity:.85}
+.dayc .dn{font-weight:800;font-size:16px}
+.dayc .dots{display:flex;gap:3px;height:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3)}
+.dot.ex{background:#7CF3D9}.dot.pr{background:#FFD166}
+.dayc[aria-pressed="true"]{background:#fff;color:#3A22A8}
+.hero.food .dayc[aria-pressed="true"]{color:#D6431F}
+.dayc[aria-pressed="true"] .dot{background:#E3DDF7}
+.dayc[aria-pressed="true"] .dot.ex{background:var(--mint)}.dayc[aria-pressed="true"] .dot.pr{background:var(--sun)}
+.viewing{background:var(--surface);box-shadow:var(--shadow);border-radius:16px;padding:10px 12px;font-size:15px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600}
+.viewing button{background:var(--primary);color:var(--primary-ink);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px}
+
+.card{background:var(--surface);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+h2.sec{font-size:22px;margin:22px 4px 12px;display:flex;justify-content:space-between;align-items:baseline}
+h2.sec small{font:600 14px "Figtree",sans-serif;color:var(--muted)}
+
+/* Habits */
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.quick .card{margin:0;padding:14px;position:relative;overflow:hidden}
+.qi{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:19px;margin-bottom:8px}
+.quick h3{font:700 16px "Figtree",sans-serif}
+.quick p{margin:1px 0 10px;font-size:13px;color:var(--muted)}
+.stepper{display:flex;align-items:center;justify-content:space-between}
+.stepper button{width:42px;height:42px;border-radius:50%;background:color-mix(in srgb,var(--sun) 22%,var(--surface));font-size:22px;line-height:1;font-weight:700}
+.stepper output{font-weight:800;font-size:19px}
+.big-toggle{width:100%;min-height:42px;border-radius:12px;background:color-mix(in srgb,var(--mint) 18%,var(--surface));font-weight:700;font-size:15px;color:var(--mint)}
+.big-toggle[aria-pressed="true"]{background:var(--mint);color:#fff}
+.pain-card h3{font:700 16px "Figtree",sans-serif;margin-bottom:10px}
+.pain{display:grid;grid-template-columns:repeat(11,1fr);gap:3px}
+.pain button{border-radius:9px;height:38px;font-size:14px;font-weight:700;padding:0;background:color-mix(in srgb,var(--pc) 20%,var(--surface));color:var(--ink)}
+.pain button[aria-pressed="true"]{background:var(--pc);color:#fff;transform:scale(1.08)}
+.pain-scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+.safety{background:var(--warn-soft);border-radius:18px;padding:12px 14px;margin-bottom:12px;font-size:15px}
+.safety summary{font-weight:700;color:var(--warn);list-style:none;display:flex;justify-content:space-between;cursor:pointer}
+.safety summary::-webkit-details-marker{display:none}
+.safety summary::after{content:"+";font-size:20px;line-height:1}
+.safety[open] summary::after{content:"−"}
+.safety ul{margin:8px 0 0;padding-left:20px}
+
+/* Exercise cards */
+.ex{background:var(--surface);border-radius:26px;overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);position:relative}
+.art{background:color-mix(in srgb,var(--acc) 15%,var(--surface));position:relative;padding:22px 8px 10px}
+.art svg{display:block;width:100%;height:auto}
+.art .tag{position:absolute;left:14px;top:12px;font-size:12px;font-weight:800;background:var(--acc);color:#fff;padding:4px 10px;border-radius:999px}
+.art .doneb{position:absolute;right:14px;top:12px;font-size:12px;font-weight:800;background:#fff;color:var(--acc);padding:4px 10px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.ex-body{padding:14px 16px 16px}
+.ex h3{font-size:23px}
+.dose{color:var(--acc);font-weight:800;font-size:15px;margin-top:3px}
+.works{color:var(--muted);font-size:14px;margin-top:1px}
+.sets{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px;margin-top:14px}
+.set{min-height:50px;border-radius:15px;background:color-mix(in srgb,var(--acc) 12%,var(--surface));font-weight:800;font-size:15px;color:var(--acc);transition:background .2s,color .2s}
+.set[aria-pressed="true"]{background:var(--acc);color:#fff}
+.timer{width:100%;min-height:46px;margin-top:8px;border:2px dashed color-mix(in srgb,var(--acc) 45%,transparent);background:transparent;border-radius:15px;font-weight:700;font-size:15px;color:var(--acc);font-variant-numeric:tabular-nums}
+.timer.running{background:var(--ink);border:2px solid var(--ink);color:var(--bg)}
+.how{margin-top:8px}
+.how summary{font-weight:700;font-size:15px;color:var(--ink);cursor:pointer;padding:8px 0;list-style:none;display:flex;justify-content:space-between}
+.how summary::-webkit-details-marker{display:none}
+.how summary::after{content:"Show";font-size:13px;color:var(--acc)}
+.how[open] summary::after{content:"Hide"}
+.how ol{margin:4px 0 8px;padding:0;list-style:none;counter-reset:s}
+.how li{counter-increment:s;display:flex;gap:10px;margin-bottom:8px;font-size:15px}
+.how li::before{content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:color-mix(in srgb,var(--acc) 16%,var(--surface));color:var(--acc);font-weight:800;font-size:13px;display:grid;place-items:center;margin-top:1px}
+.tip{font-size:14px;background:color-mix(in srgb,var(--sun) 18%,var(--surface));border-radius:12px;padding:9px 12px}
+.nexts{font-size:13px;color:var(--muted);margin-top:8px}
+.ex.done .art::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 60%,color-mix(in srgb,var(--acc) 12%,transparent))}
+.celebrate{text-align:center;padding:22px 16px;border-radius:26px;margin-bottom:14px;color:#fff;background:linear-gradient(135deg,var(--mint),#3ACB7E)}
+.celebrate b{display:block;font:800 22px "Bricolage Grotesque",sans-serif}
+
+/* Figures */
+.lab{font:800 12px "Figtree",sans-serif;fill:var(--acc);letter-spacing:.02em}
+.labbg{fill:var(--surface)}
+.mat{fill:var(--acc);opacity:.35}
+.floor{stroke:color-mix(in srgb,var(--acc) 45%,var(--surface));stroke-width:3;stroke-linecap:round}
+.prop{fill:none;stroke:color-mix(in srgb,var(--ink) 45%,var(--surface));stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.propf{fill:color-mix(in srgb,var(--ink) 12%,var(--surface));stroke:color-mix(in srgb,var(--ink) 40%,var(--surface));stroke-width:2.5}
+.arr{stroke:var(--acc);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.lk{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.chev{fill:none;stroke:color-mix(in srgb,var(--acc) 55%,var(--surface));stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+
+/* Food */
+.pnum{font-family:"Bricolage Grotesque",sans-serif;font-size:56px;font-weight:800;line-height:1}
+.pnum small{font-size:20px;opacity:.85;font-weight:700}
+.pmsg{font-size:15px;opacity:.95;margin-top:4px;font-weight:600}
+.pbar{height:12px;background:rgba(255,255,255,.28);border-radius:999px;overflow:hidden;margin-top:14px;position:relative;z-index:1}
+.pbar i{display:block;height:100%;background:#fff;border-radius:999px;transition:width .5s cubic-bezier(.3,.7,.3,1)}
+.add h3{font-size:20px;margin-bottom:12px}
+.gram-row{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--coral) 10%,var(--surface));border-radius:18px;padding:6px 16px;border:2px solid transparent}
+.gram-row:focus-within{border-color:var(--coral)}
+.gram-row input{flex:1;min-width:0;border:0;background:transparent;font:800 40px/1.1 "Bricolage Grotesque",sans-serif;color:var(--ink);padding:6px 0;outline:none}
+.gram-row input::placeholder{color:color-mix(in srgb,var(--coral) 35%,var(--surface))}
+.gram-row .unit{font-weight:800;color:var(--coral);font-size:20px}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.chip{min-height:46px;border-radius:14px;font-weight:800;font-size:16px;color:#fff}
+.chip:nth-child(1){background:var(--mint)}.chip:nth-child(2){background:var(--primary)}.chip:nth-child(3){background:var(--pink)}.chip:nth-child(4){background:var(--coral)}
+.name-in{width:100%;font:500 16px "Figtree",sans-serif;color:var(--ink);background:var(--surface-2);border:0;border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.add-btn{width:100%;min-height:54px;border-radius:16px;background:var(--ink);color:var(--bg);font-weight:800;font-size:17px}
+.add-btn:disabled{opacity:.35}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.log li:first-child{border-top:0}
+.av{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-weight:800;color:#fff;flex:none;font-size:16px}
+.log .nm{flex:1;min-width:0;font-weight:600}
+.log .nm span{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.log .g{font-weight:800;white-space:nowrap}
+.log .rm{width:34px;height:34px;border-radius:50%;background:var(--surface-2);color:var(--muted);font-size:17px;line-height:1;flex:none}
+.empty{color:var(--muted);font-size:15px;margin:2px 0;text-align:center;padding:10px 0}
+details.fold{background:var(--surface);border-radius:22px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow)}
+details.fold > summary{list-style:none;padding:16px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:17px;cursor:pointer}
+details.fold > summary::-webkit-details-marker{display:none}
+details.fold > summary .qi{margin:0}
+details.fold > summary span.t{flex:1}
+details.fold > summary small{font-weight:500;color:var(--muted);font-size:14px;display:block}
+details.fold > summary::after{content:"";width:10px;height:10px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin:-4px 4px 0 0;transition:transform .2s;flex:none}
+details.fold[open] > summary::after{transform:rotate(-135deg);margin-top:4px}
+.fold-body{padding:0 16px 14px}
+.fcat{font-size:14px;font-weight:800;color:var(--muted);margin:12px 0 6px}
+.fitem{display:flex;align-items:center;gap:10px;width:100%;background:var(--surface-2);border-radius:14px;padding:10px 12px;margin-bottom:6px;text-align:left;min-height:54px}
+.fitem .nm{flex:1;font-weight:600}
+.fitem .nm span{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.fitem .g{font-weight:800;font-size:15px}
+.fitem .plus{width:30px;height:30px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center;font-size:19px;font-weight:700;flex:none}
+.meal{background:var(--surface-2);border-radius:16px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.meal .nm{flex:1;font-size:15px}
+.meal .nm b{display:block;font-size:16px}
+.meal .nm span{color:var(--muted);font-size:13px}
+.meal button{background:var(--coral);color:#fff;border-radius:12px;padding:9px 14px;font-weight:800;font-size:14px}
+.notes ul{margin:0;padding-left:20px;font-size:15px}
+.notes li{margin-bottom:6px}
+
+/* Tabbar */
+.tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:10;background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:999px;padding:6px;display:flex;gap:4px;box-shadow:0 10px 30px rgba(30,20,80,.18);border:1px solid var(--line)}
+.tab{border-radius:999px;padding:12px 24px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:var(--muted);background:transparent}
+.tab svg{width:22px;height:22px}
+.tab[aria-selected="true"]{background:var(--primary);color:var(--primary-ink)}
+.tab#t-food[aria-selected="true"]{background:var(--coral);color:#fff}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;font-size:15px;transition:all .25s;pointer-events:none;z-index:20;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:16px}
+
+.hs.lvl{background:rgba(255,255,255,.95);color:#3A22A8}
+.hs.lvl{flex-direction:column-reverse;align-items:flex-start;gap:0;line-height:1.25}.hs.lvl b{font-size:12px;opacity:.7}
+.lvbar{height:8px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden}
+.lvbar i{display:block;height:100%;width:0;background:#7CF3D9;border-radius:99px;transition:width .6s}
+#nextTxt{font-size:13px;font-weight:600;line-height:1.3}
+.unlock{background:linear-gradient(135deg,color-mix(in srgb,var(--sun) 30%,var(--surface)),var(--surface));border:2px solid var(--sun)}
+.unlock[hidden]{display:none}
+.unlock b{font:800 19px "Bricolage Grotesque",sans-serif;display:block;margin-bottom:4px}
+.unlock ul{margin:6px 0 0;padding-left:20px;font-size:15px}
+.hold{background:var(--warn-soft);border-radius:18px;padding:12px 14px;margin-bottom:12px;font-size:15px;color:var(--warn);font-weight:600}
+.lvl-row{border-radius:16px;padding:12px;margin-bottom:8px;background:var(--surface-2)}
+.lvl-row.cur{outline:2px solid var(--primary)}
+.lvl-row h4{margin:0 0 2px;font:800 16px "Bricolage Grotesque",sans-serif;display:flex;justify-content:space-between}
+.lvl-row h4 small{font:600 13px Figtree,sans-serif;color:var(--muted)}
+.lvl-row p{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px}
+.xc{font-size:13px;font-weight:700;padding:5px 10px;border-radius:99px;background:var(--surface);color:var(--ink)}
+.xc.lock{opacity:.55}
+.xc.grad{text-decoration:line-through;opacity:.55}
+.src{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--acc) 14%,var(--surface));color:var(--acc);margin-bottom:6px}
+.new-badge{position:absolute;right:14px;top:12px;font-size:12px;font-weight:800;background:var(--sun);color:#2a1a00;padding:4px 10px;border-radius:999px}
+.band{stroke:#E8414F;stroke-width:5;fill:none;stroke-linecap:round;opacity:.9}
+.pillow{fill:#fff;stroke:color-mix(in srgb,var(--ink) 30%,#fff);stroke-width:2}
+.glow{fill:var(--acc);opacity:.45}
+.heat{fill:none;stroke:#FF5A3C;stroke-width:3;stroke-linecap:round}
+
+.reset-link{display:block;margin:18px auto 0;background:transparent;color:var(--muted);font-weight:700;font-size:15px;padding:10px 16px;border-radius:12px}
+.sheet-bg{position:fixed;inset:0;background:rgba(15,10,35,.45);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg[hidden]{display:none}
+.sheet{background:var(--surface);width:100%;max-width:520px;border-radius:26px 26px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.sheet h3{font-size:22px;margin-bottom:6px}
+.sheet p{margin:0 0 14px;color:var(--muted);font-size:15px}
+.sheet button{width:100%;min-height:54px;border-radius:16px;font-weight:800;font-size:16px;margin-bottom:8px;text-align:left;padding:10px 16px}
+.sheet button small{display:block;font-weight:500;font-size:13px;opacity:.8}
+.sheet .r1{background:color-mix(in srgb,var(--primary) 12%,var(--surface));color:var(--primary)}
+.sheet .r2{background:var(--warn-soft);color:var(--warn)}
+.sheet .cancel{background:var(--surface-2);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="viewing" id="viewing" hidden></div>
+
+  <!-- EXERCISE -->
+  <section class="panel" id="p-ex" role="tabpanel" aria-labelledby="t-ex">
+    <div class="hero">
+      <div class="hi" id="greet"></div>
+      <h1>Strong legs, calm back</h1>
+      <div class="hero-row">
+        <svg class="ring" width="104" height="104" viewBox="0 0 104 104" aria-hidden="true"><circle class="tr" cx="52" cy="52" r="42"/><circle class="v" id="ringEx" cx="52" cy="52" r="42" stroke="#7CF3D9"/><text x="52" y="56" id="ringExT">0/7</text><text class="sm" x="52" y="72">exercises</text></svg>
+        <div class="hero-stats">
+          <div class="hs lvl"><span id="lvlName">Level 1</span><b id="lvlSess">Session 1</b></div>
+          <div class="lvbar"><i id="lvBar"></i></div>
+          <div class="hs"><span id="nextTxt">Next unlock</span></div>
+          <div class="hs"><span>🔥 Streak</span><b id="hsStreak">0 days</b></div>
+        </div>
+      </div>
+      <div class="week" data-week aria-label="Last 7 days"></div>
+    </div>
+
+    <div class="quick">
+      <div class="card"><div class="qi" style="background:color-mix(in srgb,var(--sun) 22%,var(--surface))">🪑</div><h3>Desk breaks</h3><p>Every 45 min · goal 10</p>
+        <div class="stepper"><button data-act="brk-" aria-label="Remove a break">−</button><output id="brk">0</output><button data-act="brk+" aria-label="Add a break">+</button></div></div>
+      <div class="card"><div class="qi" style="background:color-mix(in srgb,var(--mint) 20%,var(--surface))">🚶‍♀️</div><h3>Daily walk</h3><p>20–30 min, easy pace</p>
+        <button class="big-toggle" id="walk" data-act="walk" aria-pressed="false">Mark done</button></div>
+    </div>
+    <div class="card pain-card"><h3>How's your back today?</h3>
+      <div class="pain" id="pain" role="group" aria-label="Pain from 0 to 10"></div>
+      <div class="pain-scale"><span>😊 No pain</span><span>Worst 😣</span></div>
+    </div>
+    <details class="safety">
+      <summary>Safety first · read once</summary>
+      <ul>
+        <li>Stop any exercise that sends pain further down your leg. A mild muscle burn is fine.</li>
+        <li>See a doctor soon if your leg weakness is getting worse or your foot drags.</li>
+        <li>Go to emergency care for numbness around the groin or new bladder or bowel problems.</li>
+      </ul>
+    </details>
+
+    <div class="card unlock" id="unlockCard" hidden></div>
+    <details class="fold" id="roadmap"><summary><span class="qi" style="background:color-mix(in srgb,var(--primary) 18%,var(--surface))">🗺️</span><span class="t">Your level plan<small>What unlocks and when</small></span></summary><div class="fold-body" id="roadBody"></div></details>
+    <h2 class="sec">Today's routine <small id="routineMeta"></small></h2>
+    <div id="exList"></div>
+    <button class="reset-link" id="resetOpen">↺ Reset progress</button>
+  </section>
+
+  <!-- FOOD -->
+  <section class="panel" id="p-food" role="tabpanel" aria-labelledby="t-food" hidden>
+    <div class="hero food">
+      <div class="hi">Protein today</div>
+      <div class="pnum" id="pNum" style="position:relative;z-index:1">0<small> / 70 g</small></div>
+      <div class="pmsg" id="pMsg" style="position:relative;z-index:1"></div>
+      <div class="pbar"><i id="pBar" style="width:0"></i></div>
+      <div class="week" data-week aria-label="Last 7 days"></div>
+    </div>
+
+    <div class="card add">
+      <h3>Just ate? Add protein</h3>
+      <form id="addForm" autocomplete="off">
+        <div class="gram-row">
+          <input id="gIn" name="g" type="number" inputmode="decimal" min="0" max="200" step="0.5" placeholder="0" aria-label="Protein grams">
+          <span class="unit">grams</span>
+        </div>
+        <div class="chips">
+          <button type="button" class="chip" data-q="5">+5</button><button type="button" class="chip" data-q="10">+10</button>
+          <button type="button" class="chip" data-q="15">+15</button><button type="button" class="chip" data-q="20">+20</button>
+        </div>
+        <input id="nIn" class="name-in" name="n" maxlength="60" placeholder="What did you eat? (optional)" aria-label="Food name">
+        <button class="add-btn" id="addBtn" type="submit" disabled>Add to today</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:20px;margin-bottom:6px">Eaten today</h3>
+      <ul class="log" id="log"></ul>
+    </div>
+
+    <details class="fold">
+      <summary><span class="qi" style="background:color-mix(in srgb,var(--mint) 20%,var(--surface))">🥗</span><span class="t">Common foods<small>Tap to add one serving</small></span></summary>
+      <div class="fold-body" id="foods"></div>
+    </details>
+    <details class="fold">
+      <summary><span class="qi" style="background:color-mix(in srgb,var(--sun) 24%,var(--surface))">🍛</span><span class="t">Sample day · 83 g<small>Vegetarian meal ideas</small></span></summary>
+      <div class="fold-body" id="meals"></div>
+    </details>
+    <details class="fold notes">
+      <summary><span class="qi" style="background:color-mix(in srgb,var(--primary) 18%,var(--surface))">💡</span><span class="t">Protein tips</span></summary>
+      <div class="fold-body"><ul>
+        <li>Aim for 65–85 g a day, about 20 g at each meal.</li>
+        <li>Pair dal or beans with roti or rice for complete protein.</li>
+        <li>Paneer, Greek yogurt, soya chunks and tofu give the most protein.</li>
+        <li>Low vitamin B12 can worsen nerve symptoms, so ask your doctor to check B12 and vitamin D.</li>
+      </ul></div>
+    </details>
+  </section>
+
+  <p class="foot" id="saveState"></p>
+  <p class="foot">General guidance, not a substitute for a doctor or physiotherapist. Protein values are approximate.</p>
+</div>
+
+<nav class="tabbar" role="tablist">
+  <button class="tab" role="tab" id="t-ex" aria-controls="p-ex" aria-selected="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M7 21l3-6 3 2v4M10 15l1-5 4 2 3-1M11 10l-3 1-2 3"/></svg>Exercise</button>
+  <button class="tab" role="tab" id="t-food" aria-controls="p-food" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0zM7 7c0-2 2-2 2-4M12 7c0-2 2-2 2-4M17 7c0-2 2-2 2-4"/></svg>Food</button>
+</nav>
+<div class="sheet-bg" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetT">
+    <h3 id="sheetT">Start over?</h3>
+    <p>You'll go back to Level 1, session 1. This can't be undone.</p>
+    <button class="r1" data-reset="ex">Reset exercises only<small>Clears sets, walks, breaks and pain scores. Keeps your food log.</small></button>
+    <button class="r2" data-reset="all">Reset everything<small>Clears exercises and food for every day.</small></button>
+    <button class="cancel" data-reset="no">Cancel</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const TARGET = 70;
+
+/* ================= Illustrations ================= */
+const pts = a => a.map(p => p.join(",")).join(" ");
+const seg = (a, col, w) => `<polyline class="lk" points="${pts(a)}" stroke="${col}" stroke-width="${w}"/>`;
+function person(p){
+  const [hx,hy] = p.head, [fx,fy] = p.face;
+  const shoe = (foot, toe, col) => seg([foot,[foot[0]+toe[0],foot[1]+toe[1]]], col, 8);
+  const tN = p.tN || [9,0], tF = p.tF || tN;
+  const sleeve = (sh, el) => seg([sh,[sh[0]+(el[0]-sh[0])*.45, sh[1]+(el[1]-sh[1])*.45]], p.top, 11);
+  let s = "";
+  // far side
+  s += seg([p.sh, ...p.aF], "var(--skinD)", 8) + sleeve(p.sh, p.aF[0]);
+  s += seg([p.hip, p.lF[0]], "var(--legsD)", 14) + seg([p.lF[0], p.lF[1]], "var(--legsD)", 12) + shoe(p.lF[1], tF, "var(--shoe)");
+  // neck + torso
+  s += seg([p.sh,[hx-fx*1,hy-fy*1]], "var(--skinD)", 7);
+  const up = p.mid || p.sh;
+  s += seg(p.mid ? [p.sh, p.mid, p.hip] : [p.sh, p.hip], p.top, 21);
+  s += seg([p.hip,[p.hip[0]+(up[0]-p.hip[0])*.18, p.hip[1]+(up[1]-p.hip[1])*.18]], "var(--legs)", 21);
+  if(p.extra) s += p.extra;
+  // near side
+  s += seg([p.hip, p.lN[0]], "var(--legs)", 14) + seg([p.lN[0], p.lN[1]], "var(--legs)", 12) + shoe(p.lN[1], tN, "var(--shoe)");
+  s += seg([p.sh, ...p.aN], "var(--skin)", 8) + sleeve(p.sh, p.aN[0]);
+  // head: bun, hair, face, eye
+  s += `<circle cx="${hx-fx*10-fy*2}" cy="${hy-fy*10+fx*-3}" r="6.5" fill="var(--hair)"/>`;
+  s += `<circle cx="${hx-fx*2}" cy="${hy-fy*2-1}" r="12" fill="var(--hair)"/>`;
+  s += `<circle cx="${hx+fx*1.5}" cy="${hy+fy*1.5+1}" r="10" fill="var(--skin)"/>`;
+  s += `<circle cx="${hx+fx*6.5}" cy="${hy+fy*6.5-1}" r="1.7" fill="var(--hair)"/>`;
+  return s;
+}
+const arrowDef = `<defs><marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--acc)"/></marker></defs>`;
+const arrow = d => `<path class="arr" d="${d}" marker-end="url(#ah)"/>`;
+const mat = `<rect class="mat" x="4" y="121" width="192" height="6" rx="3"/>`;
+const floorL = `<line class="floor" x1="6" y1="124" x2="194" y2="124"/>`;
+function label(t){ const w = t.length*7.4+18; return `<rect class="labbg" x="${100-w/2}" y="134" width="${w}" height="22" rx="11"/><text class="lab" x="100" y="149.5" text-anchor="middle">${t}</text>`; }
+function scene(a, b, labels=["Start","Move"]){
+  return `<svg viewBox="0 -26 420 186" role="img" aria-hidden="true">${arrowDef}
+    <g>${label(labels[0])}${a}</g>
+    <path class="chev" d="M204 52 l8 8 -8 8"/>
+    <g transform="translate(220 0)">${label(labels[1])}${b}</g></svg>`;
+}
+const chair = `<path class="prop" d="M36 124 V36 M36 86 H86 M84 86 V124"/>`;
+const wallL = `<rect class="propf" x="16" y="-10" width="12" height="134" rx="3"/>`;
+const wallR = `<rect class="propf" x="172" y="-10" width="12" height="134" rx="3"/>`;
+const box = `<rect class="propf" x="100" y="94" width="84" height="30" rx="5"/>`;
+
+const SUP = {head:[26,106],face:[0,-1],sh:[46,111],hip:[102,111],aN:[[66,115],[88,116]],aF:[[64,113],[86,114]]};
+const BENT = {lN:[[132,84],[146,118]],lF:[[137,86],[152,118]]};
+const STRAIGHT = {lN:[[138,113],[174,115]],lF:[[140,111],[176,113]],tN:[1,-9],tF:[1,-9]};
+const SIDE = {head:[26,96],face:[0.9,0.4],sh:[46,107],hip:[104,106],aN:[[66,102],[80,116]],aF:[[34,114],[16,104]]};
+const QUAD = {head:[38,62],face:[-1,0.15],sh:[56,76],hip:[122,78],tN:[7,0],tF:[7,0],aN:[[58,98],[58,119]],aF:[[52,98],[52,119]],lN:[[122,119],[156,119]],lF:[[116,119],[150,119]]};
+const PRONE = {head:[26,108],face:[-0.3,0.9],sh:[48,113],hip:[104,113],aN:[[40,119],[20,117]],aF:[[42,117],[22,115]],lN:[[140,115],[176,117]],lF:[[142,113],[178,115]],tN:[5,5],tF:[5,5]};
+const txt = (x,y,t,sz=26) => `<text x="${x}" y="${y}" text-anchor="middle" style="font:800 ${sz}px 'Bricolage Grotesque',sans-serif;fill:var(--acc)">${t}</text>`;
+function topView(top, open){
+  const leg = (x1,x2,y2,c) => seg([[x1,64],[x2,y2]], c, 14) + `<ellipse cx="${x2}" cy="${y2+5}" rx="5" ry="7" fill="var(--shoe)"/>`;
+  return `<rect class="mat" x="52" y="-20" width="110" height="150" rx="12" style="opacity:.22"/>`
+    + seg([[84,20],[78,62]], "var(--skin)", 8) + seg([[116,20],[122,62]], "var(--skin)", 8)
+    + leg(93,90,118,"var(--legs)") + leg(107, open?142:110, open?110:118, "var(--legs)")
+    + seg([[100,20],[100,60]], top, 34) + seg([[100,58],[100,64]], "var(--legs)", 30)
+    + `<circle cx="100" cy="0" r="12" fill="var(--hair)"/><circle cx="100" cy="2" r="9.5" fill="var(--skin)"/>`
+    + (open ? arrow("M122 122 Q140 128 150 118") : "");
+}
+function FIG(id, top){
+  const P = o => person({top, ...o});
+  switch(id){
+  case "hotpack":
+    return scene(mat + P(PRONE),
+      mat + P({...PRONE, extra:`<rect x="78" y="100" width="34" height="14" rx="4" fill="#FF6A3D"/>`}) +
+      `<path class="heat" d="M84 94 q4 -6 0 -12 q-4 -6 0 -12 M95 94 q4 -6 0 -12 q-4 -6 0 -12 M106 94 q4 -6 0 -12 q-4 -6 0 -12"/>` + txt(160,60,"10 min",20),
+      ["Lie comfortably","Warm low back"]);
+  case "adductor":
+    return scene(mat + P({...SUP,...BENT}) + `<ellipse class="pillow" cx="130" cy="88" rx="13" ry="9"/>`,
+      mat + P({...SUP,...BENT}) + `<ellipse class="pillow" cx="130" cy="88" rx="9" ry="7"/>` + arrow("M112 70 L124 78") + arrow("M158 70 L146 78") + txt(172,40,"5s",22),
+      ["Pillow at knees","Squeeze 5 s"]);
+  case "addabd":
+    return scene(topView(top,false), topView(top,true), ["Legs together","Slide leg out"]);
+  case "sideslr":
+    return scene(mat + P({...SIDE, lF:[[140,112],[176,116]], lN:[[140,104],[176,108]], tN:[3,-6], tF:[3,-6]}),
+      mat + P({...SIDE, lF:[[140,112],[176,116]], lN:[[138,88],[170,68]], tN:[4,-6], tF:[3,-6]}) + arrow("M186 104 Q196 84 182 64"),
+      ["Lie on side","Lift top leg"]);
+  case "bridge":
+    return scene(mat + P({...SUP,...BENT}),
+      mat + P({...SUP, hip:[104,86], lN:[[136,74],[146,118]], lF:[[141,76],[152,118]]}) + arrow("M104 118 V 101"),
+      ["Start","Lift hips"]);
+  case "curlup":
+    return scene(mat + P({...SUP,...BENT, aN:[[66,106],[88,98]], aF:[[64,104],[86,96]]}),
+      mat + P({...SUP,...BENT, head:[40,84], face:[0.6,-0.8], sh:[58,97], aN:[[84,94],[110,88]], aF:[[82,92],[108,86]]}) + arrow("M24 96 Q26 76 40 66"),
+      ["Hands on thighs","Lift shoulders"]);
+  case "glutes":
+    return scene(mat + P({...SUP,...STRAIGHT}),
+      mat + P({...SUP,...STRAIGHT}) + `<circle class="glow" cx="106" cy="110" r="17"/>` + txt(104,72,"squeeze",16) + txt(170,70,"5s",22),
+      ["Relax","Squeeze 5 s"]);
+  case "lion":
+    return scene(mat + P(QUAD),
+      mat + P({head:[50,102],face:[-0.9,0.4],sh:[70,100],hip:[132,104],aN:[[42,114],[14,116]],aF:[[44,112],[16,114]],lN:[[104,119],[142,121]],lF:[[100,119],[138,121]],tN:[6,0],tF:[6,0]}) + arrow("M150 70 H 176"),
+      ["Hands & knees","Sit back on heels"]);
+  case "catcamel":
+    return scene(mat + P({...QUAD, mid:[90,60], head:[40,72], face:[-0.8,0.6]}) + arrow("M90 40 V 26"),
+      mat + P({...QUAD, mid:[90,88], head:[38,58], face:[-0.9,-0.4]}) + arrow("M90 40 V 58"),
+      ["Round back up","Let it dip"]);
+  case "kneechest":
+    return scene(mat + P({...SUP,...BENT}),
+      mat + P({...SUP, lN:[[86,78],[116,72]], tN:[4,-8], lF:[[137,86],[152,118]], aN:[[64,92],[86,82]], aF:[[62,94],[84,84]]}) + arrow("M126 58 Q106 50 92 60"),
+      ["Knees bent","Hug knee in"]);
+  case "loopclam": {
+    const base = {...SIDE, lF:[[146,114],[112,118]], tN:[-8,1], tF:[-8,1]};
+    return scene(mat + P({...base, lN:[[145,103],[114,110]]}) + `<path class="band" d="M134 100 L136 114"/>`,
+      mat + P({...base, lN:[[134,70],[114,110]]}) + `<path class="band" d="M126 80 L136 114"/>` + arrow("M158 104 Q166 84 150 68"),
+      ["Band above knees","Open knee"]);
+  }
+  case "proneelbow":
+    return scene(mat + P(PRONE),
+      mat + P({...PRONE, head:[34,78], face:[-0.8,-0.5], sh:[54,92], aN:[[56,118],[26,118]], aF:[[52,117],[24,116]], tN:[5,5]}) + arrow("M78 116 Q70 96 76 82"),
+      ["Lie on stomach","Prop on elbows"]);
+  case "hamstring":
+    return scene(mat + P({...SUP, lN:[[102,72],[136,72]], tN:[1,-9], lF:[[140,111],[176,113]], tF:[1,-9], aN:[[74,96],[98,86]], aF:[[72,94],[96,84]]}) + txt(150,54,"90°",16),
+      mat + P({...SUP, lN:[[102,72],[108,34]], tN:[7,-4], lF:[[140,111],[176,113]], tF:[1,-9], aN:[[74,96],[98,86]], aF:[[72,94],[96,84]]}) + arrow("M140 72 Q134 44 118 34"),
+      ["Hip & knee 90°","Straighten knee"]);
+  case "birddog":
+    return scene(mat + P(QUAD),
+      mat + P({...QUAD, aN:[[32,79],[8,79]], lF:[[154,74],[190,71]], tF:[6,-4]}) + arrow("M30 96 H 10") + arrow("M150 56 H 186"),
+      ["Start","Reach"]);
+  case "sitstand":
+    return scene(floorL + chair + P({head:[86,20],face:[1,0.1],sh:[80,35],hip:[68,78],lN:[[110,80],[112,119]],lF:[[106,82],[108,119]],aN:[[100,52],[78,48]],aF:[[96,48],[76,52]]}),
+      floorL + chair + P({head:[114,14],face:[1,0],sh:[112,28],hip:[110,66],lN:[[114,93],[116,119]],lF:[[110,93],[112,119]],aN:[[126,44],[104,40]],aF:[[122,40],[102,44]]}) + arrow("M156 100 V 50"),
+      ["Sit tall","Stand up"]);
+  case "wallsit":
+    return scene(floorL + wallL + P({head:[46,16],face:[1,0],sh:[42,30],hip:[42,68],lN:[[56,95],[68,119]],lF:[[52,95],[64,119]],aN:[[46,50],[50,70]],aF:[[42,50],[46,70]]}),
+      floorL + wallL + P({head:[46,34],face:[1,0],sh:[42,48],hip:[42,88],lN:[[90,86],[92,119]],lF:[[86,88],[88,119]],aN:[[58,66],[78,80]],aF:[[54,68],[74,82]]}) + txt(150,60,"30s",30),
+      ["Back on wall","Slide & hold"]);
+  case "calf":
+    return scene(floorL + wallR + P({head:[94,22],face:[1,0],sh:[92,36],hip:[90,74],lN:[[92,97],[90,118]],lF:[[88,97],[86,118]],tN:[14,1],tF:[14,1],aN:[[122,48],[168,52]],aF:[[118,50],[166,56]]}),
+      floorL + wallR + P({head:[95,10],face:[1,0],sh:[93,24],hip:[91,62],lN:[[93,86],[94,106]],lF:[[89,86],[90,106]],tN:[9,12],tF:[9,12],aN:[[123,38],[168,44]],aF:[[119,40],[166,48]]}) + arrow("M58 118 V 94"),
+      ["Heels down","Up on toes"]);
+  case "stepup":
+    return scene(floorL + box + P({head:[72,12],face:[1,0],sh:[70,26],hip:[68,64],lN:[[96,70],[112,90]],lF:[[68,92],[68,119]],aN:[[72,46],[76,64]],aF:[[66,46],[70,64]]}),
+      floorL + box + P({head:[126,-10],face:[1,0],sh:[124,4],hip:[122,42],lN:[[126,66],[124,90]],lF:[[112,66],[102,88]],tF:[8,3],aN:[[128,24],[132,42]],aF:[[120,24],[122,42]]}) + arrow("M66 104 V 50"),
+      ["Foot on step","Push up"]);
+  case "walk":
+    return scene(floorL + P({head:[101,14],face:[1,0],sh:[100,28],hip:[98,66],lN:[[110,93],[122,119]],lF:[[88,94],[76,116]],tF:[8,4],aN:[[92,46],[86,64]],aF:[[108,46],[116,62]]}),
+      floorL + P({head:[101,14],face:[1,0],sh:[100,28],hip:[98,66],lF:[[110,93],[122,119]],lN:[[88,94],[76,116]],tN:[8,4],aF:[[92,46],[86,64]],aN:[[108,46],[116,62]]}) + arrow("M140 110 H 180"),
+      ["Stride","Swing arms"]);
+  }
+}
+const ACC = {hotpack:"#FF5A3C",adductor:"#16B29A",addabd:"#2F7FE0",sideslr:"#6A4BE0",bridge:"#FF6B4A",curlup:"#E08A00",glutes:"#F0457E",
+  lion:"#9A4FD6",catcamel:"#16B29A",kneechest:"#2F7FE0",loopclam:"#E8414F",proneelbow:"#E08A00",hamstring:"#3E9E3A",
+  birddog:"#6A4BE0",sitstand:"#E08A00",wallsit:"#F0457E",calf:"#2F7FE0",stepup:"#3E9E3A",walk:"#9A4FD6"};
+
+/* ================= Program ================= */
+// unlock = session number when it appears; retire = session when it graduates out
+const EXERCISES = [
+  {id:"hotpack",src:"b",name:"Hot pack",sets:1,setLabel:"Done",dose:"10 minutes on your lower back, before exercise",works:"Relaxes tight muscles and eases pain",timer:600,timerLabel:"Hot pack",unlock:1,
+   steps:["Lie on your stomach or side, whichever is comfortable.","Place the hot pack on your lower back with a towel between the pack and your skin.","Relax for 10 minutes, then start your exercises."],
+   caution:"Warm, never hot. Don't use it on skin that feels numb, and check your skin after.",next:""},
+  {id:"adductor",src:"b",name:"Static adductor with pillow",sets:2,dose:"2 sets × 10 squeezes, hold 5 s",works:"Inner thighs, pelvic floor, deep core",timer:5,timerLabel:"Hold",unlock:1,retire:18,
+   steps:["Lie on your back, knees bent, feet flat. Put a folded pillow between your knees.","Gently tighten your tummy and squeeze the pillow.","Hold 5 seconds, then relax fully."],
+   caution:"Breathe normally throughout. Don't hold your breath.",next:"Graduates at Level 3, when stronger exercises take its place."},
+  {id:"addabd",src:"b",name:"Supine add & abd",sets:2,dose:"2 sets × 10 each leg",works:"Hip muscles on the inside and outside",timer:30,timerLabel:"Rest",unlock:1,retire:18,
+   steps:["Lie on your back with both legs straight.","Keeping your toes pointing up, slide one leg out to the side along the floor.","Slide it back to the middle. Finish all reps, then switch legs."],
+   caution:"Keep your hips flat. Slide slowly and only as far as is comfortable.",next:"Graduates at Level 3."},
+  {id:"sideslr",src:"b",name:"Side straight leg raise",sets:2,dose:"2 sets × 10 each side",works:"Outer hip (gluteus medius), pelvis stability",timer:45,timerLabel:"Rest",unlock:2,
+   steps:["Lie on your side, legs straight and stacked, bottom knee slightly bent for balance if needed.","Lift your top leg up about 30–40 cm, toes pointing forward.","Lower slowly. Finish reps, then turn to the other side."],
+   caution:"Don't roll backwards. Your leg should go slightly behind your body, not in front.",next:"Getting easy? Add a 2-second hold at the top."},
+  {id:"bridge",src:"b",name:"Bridging (pain-free)",sets:2,dose:"2 sets × 10, hold 3 s",works:"Glutes, hamstrings, lower back support",timer:45,timerLabel:"Rest",unlock:2,
+   lv4:{dose:"3 sets × 10, single-leg (other leg straight)"},
+   steps:["Lie on your back, knees bent, feet flat and hip-width apart.","Squeeze your glutes and lift your hips only as high as is pain-free.","Hold 3 seconds, then lower slowly."],
+   caution:"Pain-free means lift less if it hurts. Push through your heels, don't arch your back.",next:"At Level 4 this becomes a single-leg bridge."},
+  {id:"curlup",src:"b",name:"Semi curl-ups",sets:2,dose:"2 sets × 10, hold 3 s",works:"Front core (abdominals)",timer:45,timerLabel:"Rest",unlock:4,
+   steps:["Lie on your back, knees bent, hands resting on your thighs.","Tighten your tummy and slide your hands toward your knees, lifting only your head and shoulder blades.","Hold 3 seconds, then lower slowly."],
+   caution:"Small movement only. This is not a full sit-up. Skip it if it increases leg pain.",next:"Getting easy? Cross your arms on your chest."},
+  {id:"glutes",src:"b",name:"Static glutes",sets:2,dose:"2 sets × 10 squeezes, hold 5 s",works:"Wakes up the buttock muscles",timer:5,timerLabel:"Hold",unlock:4,retire:18,
+   steps:["Lie on your back with legs straight (or on your stomach).","Squeeze your buttocks together firmly.","Hold 5 seconds, then relax completely."],
+   caution:"Only the buttocks should work. Keep your legs and back relaxed.",next:"Graduates at Level 3."},
+  {id:"lion",src:"b",name:"Lion stretch",sets:3,dose:"3 holds × 20 seconds",works:"Stretches the lower back gently",timer:20,timerLabel:"Hold",unlock:5,
+   steps:["Start on hands and knees.","Keeping your hands in place, slowly sit your hips back toward your heels.","Let your arms stretch forward and your back relax. Hold, then come back."],
+   caution:"Go only as far as is comfortable. If your brother's physio showed you a different version, follow theirs.",next:""},
+  {id:"catcamel",src:"b",name:"Cat & camel",sets:2,dose:"2 sets × 10 slow reps",works:"Spine mobility, eases stiffness",timer:30,timerLabel:"Rest",unlock:6,
+   steps:["Start on hands and knees, back flat.","Slowly round your back up toward the ceiling, letting your head drop.","Then gently let your back dip down and look slightly forward. Move slowly between the two."],
+   caution:"Smooth and gentle, no bouncing. Move within a pain-free range.",next:""},
+  {id:"kneechest",src:"b",name:"Knee to chest",sets:3,dose:"3 holds × 20 seconds each leg",works:"Stretches lower back and buttock",timer:20,timerLabel:"Hold",unlock:7,
+   steps:["Lie on your back with both knees bent.","Hold behind one knee and gently pull it toward your chest.","Hold, then lower and switch legs."],
+   caution:"Keep your other foot on the floor. Stop if it increases pain down your leg.",next:""},
+  {id:"loopclam",src:"b",name:"Loop clamshell",sets:2,dose:"2 sets × 12 each side",works:"Outer hips, pelvis stability",timer:45,timerLabel:"Rest",unlock:9,
+   steps:["Loop a resistance band just above your knees and lie on your side, knees bent at 45°.","Keeping your feet together, open your top knee against the band.","Lower slowly. Finish reps, then switch sides."],
+   caution:"Don't let your hips roll back. Start with a light band.",next:"Getting easy? Use a stronger band."},
+  {id:"proneelbow",src:"b",name:"Prone on elbows",sets:3,dose:"3 holds × 30 seconds",works:"Gentle back extension, often eases disc-related leg pain",timer:30,timerLabel:"Hold",unlock:11,
+   steps:["Lie on your stomach and relax for a few breaths.","Prop yourself up on your forearms, elbows under your shoulders.","Let your lower back and hips relax into the floor. Hold, then lower down."],
+   caution:"If your leg pain moves toward your back, that's a good sign. If it spreads further down your leg, stop.",next:""},
+  {id:"hamstring",src:"b",name:"Hamstring stretch 90-90",sets:3,dose:"3 holds × 20 seconds each leg",works:"Back of thighs, takes pressure off lower back",timer:20,timerLabel:"Hold",unlock:11,
+   steps:["Lie on your back. Lift one leg so hip and knee are both bent at 90°, holding behind your thigh.","Slowly straighten your knee until you feel a gentle stretch behind your thigh.","Hold, then bend back. Switch legs."],
+   caution:"Stretch gently. Tingling or nerve pain down the leg means ease off.",next:""},
+  {id:"sitstand",src:"c",name:"Sit to stand",sets:3,dose:"3 sets × 10 reps",works:"Thighs (quadriceps), glutes",timer:60,timerLabel:"Rest",unlock:12,
+   steps:["Sit near the front of a sturdy chair, feet flat, arms crossed on your chest.","Lean slightly forward from the hips and stand up without using your hands.","Lower yourself back down slowly, taking 3 seconds."],
+   caution:"Keep your knees pointing over your toes, not caving inward.",next:"Getting easy? Hold a water bottle at your chest."},
+  {id:"calf",src:"c",name:"Calf raise",sets:3,dose:"3 sets × 15 reps",works:"Calves, ankle strength, balance",timer:45,timerLabel:"Rest",unlock:12,
+   steps:["Stand tall with a hand on a wall for balance.","Rise up onto your toes as high as you can.","Pause 1 second, then lower slowly."],
+   caution:"If one side is clearly weaker, mention it to your doctor. It can be a nerve sign.",next:"Getting easy? Do them one leg at a time."},
+  {id:"birddog",src:"c",name:"Bird dog",sets:2,dose:"2 sets × 8 each side, hold 5 s",works:"Deep core, back stabilisers, glutes",timer:5,timerLabel:"Hold",unlock:18,
+   steps:["Start on hands and knees.","Tighten your tummy and reach one arm forward and the opposite leg back.","Hold 5 seconds with your back flat. Return and switch sides."],
+   caution:"Keep your hips level. Imagine balancing a cup of tea on your back.",next:"Getting easy? Hold for 10 seconds."},
+  {id:"wallsit",src:"c",name:"Wall sit",sets:3,dose:"3 holds × 30 seconds",works:"Thighs, knee and hip endurance",timer:30,timerLabel:"Hold",unlock:18,
+   lv4:{dose:"3 holds × 45 seconds"},
+   steps:["Stand with your back flat against a wall, feet about 50 cm forward.","Slide down until your knees are bent, about 45° at first.","Hold with your back pressed into the wall, then slide up."],
+   caution:"Only go as low as is comfortable for your back and knees.",next:"At Level 4 the hold goes up to 45 seconds."},
+  {id:"stepup",src:"c",name:"Step-up",sets:2,dose:"2 sets × 10 each leg",works:"Thighs, glutes, balance, stair strength",timer:60,timerLabel:"Rest",unlock:26,
+   steps:["Face a stair or sturdy low step. Hold a rail if needed.","Place your whole foot on the step and push through your heel to stand up on it.","Step back down slowly. Finish reps, then switch legs."],
+   caution:"Skip it on high-pain days.",next:"Getting easy? Use a higher step."}
+];
+const LEVELS = [
+  {n:1,from:1,name:"Settle the nerve",desc:"Your brother's physio plan. New exercises unlock on its schedule."},
+  {n:2,from:12,name:"Wake up the legs",desc:"Adds standing leg strength."},
+  {n:3,from:18,name:"Build strength",desc:"The easiest exercises graduate; core and thigh work step up."},
+  {n:4,from:26,name:"Strong & steady",desc:"Harder versions and stair strength."}
+];
+const levelOf = s => [...LEVELS].reverse().find(l => s >= l.from);
+function routineFor(s){ return EXERCISES.filter(e => s >= e.unlock && !(e.retire && s >= e.retire)); }
+function doseFor(e, s){ return (s >= 26 && e.lv4) ? e.lv4.dose : e.dose; }
+const FOODS = [
+  {cat:"Dairy", items:[
+    ["milk","Milk","1 glass · 250 ml",8],["curd","Curd / dahi","1 katori · 150 g",5],
+    ["greek","Greek yogurt or hung curd","150 g",15],["paneer","Paneer","50 g",9],
+    ["chaas","Buttermilk / chaas","1 glass",3],["cheese","Cheese slice","1 slice",4]]},
+  {cat:"Dals, beans & chickpeas", items:[
+    ["dal","Dal (moong, toor, masoor)","1 katori cooked",9],["rajma","Rajma or chole","1 katori cooked",12],
+    ["chilla","Besan or moong dal chilla","2 pieces",11],["sprouts","Sprouted moong salad","1 cup · 100 g",6],
+    ["chana","Roasted chana","30 g handful",6]]},
+  {cat:"Soy", items:[
+    ["soya","Soya chunks","30 g dry",15],["tofu","Tofu","100 g",12],
+    ["soymilk","Soy milk","1 glass · 250 ml",7],["edamame","Edamame","½ cup",9]]},
+  {cat:"Grains & breakfasts", items:[
+    ["roti","Whole wheat roti","1 roti",3],["rice","Rice, cooked","1 cup",4],
+    ["oats","Oats","40 g dry",5],["quinoa","Quinoa, cooked","1 cup",8],["idli","Idli","2 pieces",4]]},
+  {cat:"Nuts & seeds", items:[
+    ["peanuts","Peanuts","30 g handful",7],["almonds","Almonds","20 almonds",5],
+    ["pb","Peanut butter","2 tbsp",7],["pumpkin","Pumpkin seeds","2 tbsp",5]]},
+  {cat:"Supplements (optional)", items:[
+    ["whey","Whey protein","1 scoop",24],["plant","Plant protein powder","1 scoop",20]]}
+];
+const FOOD = {};
+FOODS.forEach(c => c.items.forEach(([id,n,s,g]) => FOOD[id] = {n,s,g}));
+
+const MEALS = [
+  {when:"Breakfast",name:"Paneer chilla",items:[["chilla",1],["paneer",1]]},
+  {when:"Mid-morning",name:"Milk & almonds",items:[["milk",1],["almonds",1]]},
+  {when:"Lunch",name:"Dal, roti & curd",items:[["dal",1],["roti",2],["curd",1]]},
+  {when:"Evening snack",name:"Chana & chaas",items:[["chana",1],["chaas",1]]},
+  {when:"Dinner",name:"Soya chunk curry",items:[["soya",1],["roti",2]]}
+];
+
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fromKey = k => { const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); };
+const addDays = (k,n) => { const d = fromKey(k); d.setDate(d.getDate()+n); return keyOf(d); };
+const todayKey = () => keyOf(new Date());
+const r1 = x => Math.round(x*10)/10;
+
+const LS_KEY = "legsback.v1";
+let days = {};
+try { days = JSON.parse(localStorage.getItem(LS_KEY) || "{}") || {}; } catch(e){ days = {}; }
+let selected = todayKey();
+let dbCol = null;
+const dirty = new Set();
+const timers = {};
+
+function day(k){ if(!days[k]) days[k] = {date:k,sets:{},walk:false,breaks:0,pain:null,food:{},custom:[]};
+  const d = days[k]; d.sets ||= {}; d.food ||= {}; d.custom ||= []; return d; }
+function saveLocal(){ try { localStorage.setItem(LS_KEY, JSON.stringify(days)); } catch(e){} }
+const saveEl = document.getElementById("saveState");
+let saveTimer = null, flushing = false;
+function persist(k){ saveLocal(); if(!dbCol) return; dirty.add(k); clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700); }
+async function flush(){
+  if(flushing){ clearTimeout(saveTimer); saveTimer = setTimeout(flush, 400); return; }
+  flushing = true; const keys = [...dirty]; dirty.clear();
+  try { for(const k of keys) await dbCol.doc(k).set(JSON.parse(JSON.stringify(day(k)))); saveEl.textContent = "✓ Synced to your account"; }
+  catch(e){ keys.forEach(k => dirty.add(k)); saveEl.textContent = "Saved on this phone";
+    if(e && e.code === "unavailable") setTimeout(flush, 3000 + Math.random()*2000); }
+  finally { flushing = false; }
+}
+
+/* ---- Progress engine: a "session" = a day where the full unlocked routine was done ---- */
+function doneWith(d, list){ return list.filter(e => (d.sets[e.id]||0) >= e.sets).length; }
+function sessionInfo(k){
+  // returns session number for day k (sessions completed before k, +1)
+  let s = 1;
+  for(const dk of Object.keys(days).sort()){
+    if(dk >= k) break;
+    const d = days[dk], list = routineFor(s);
+    if(list.every(e => (d.sets?.[e.id]||0) >= e.sets) && !(d.pain >= 7)) s++;
+  }
+  return s;
+}
+function isComplete(k){ const d = days[k]; if(!d) return false; const list = routineFor(sessionInfo(k)); return list.every(e => (d.sets[e.id]||0) >= e.sets); }
+function protein(d){ let g = 0;
+  for(const [id,n] of Object.entries(d.food)) if(FOOD[id]) g += FOOD[id].g*n;
+  for(const c of d.custom) g += Number(c.g)||0; return r1(g); }
+function streak(){ let k = todayKey(), n = 0; if(!isComplete(k)) k = addDays(k,-1);
+  while(isComplete(k)){ n++; k = addDays(k,-1); } return n; }
+function nextUnlock(s){
+  const later = EXERCISES.filter(e => e.unlock > s).map(e => e.unlock);
+  if(!later.length) return null;
+  const at = Math.min(...later);
+  return {at, items: EXERCISES.filter(e => e.unlock === at)};
+}
+
+const $ = id => document.getElementById(id);
+function esc(s){ const t = document.createElement("span"); t.textContent = s; return t.innerHTML; }
+let toastT; function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"),1800); }
+const RC = 2*Math.PI*42; $("ringEx").style.strokeDasharray = RC; $("ringEx").style.strokeDashoffset = RC;
+const PAINC = ["#16B29A","#2FB38F","#5DB57C","#8DB669","#B9B356","#E0A93F","#F0923A","#F27A38","#F06338","#E84B36","#D63A30"];
+
+function renderTop(){
+  const t = todayKey(), h = new Date().getHours();
+  $("greet").textContent = (h<12?"Good morning":h<17?"Good afternoon":"Good evening") + " · " + fromKey(selected).toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+  let w = "";
+  for(let i=6;i>=0;i--){ const k = addDays(t,-i), d = fromKey(k), rec = days[k];
+    w += `<button class="dayc" data-day="${k}" aria-pressed="${k===selected}" aria-label="${d.toDateString()}">
+      <span class="wd">${i===0?"Today":d.toLocaleDateString(undefined,{weekday:"short"})}</span><span class="dn">${d.getDate()}</span>
+      <span class="dots"><i class="dot ${isComplete(k)?"ex":""}"></i><i class="dot ${rec&&protein(rec)>=TARGET?"pr":""}"></i></span></button>`; }
+  document.querySelectorAll("[data-week]").forEach(el => el.innerHTML = w);
+  const v = $("viewing");
+  if(selected !== t){ v.hidden = false; v.innerHTML = `<span>✏️ Editing ${fromKey(selected).toLocaleDateString(undefined,{weekday:"long"})}</span><button data-day="${t}">Back to today</button>`; } else v.hidden = true;
+}
+function renderExTop(){
+  const d = day(selected), s = sessionInfo(selected), list = routineFor(s), n = doneWith(d, list), lv = levelOf(s), st = streak();
+  $("ringExT").textContent = `${n}/${list.length}`;
+  $("ringEx").style.strokeDashoffset = RC*(1-n/list.length);
+  $("lvlName").textContent = `⭐ Level ${lv.n} · ${lv.name}`;
+  $("lvlSess").textContent = `Session ${s}`;
+  const nl = LEVELS.find(l => l.from > s), prev = lv.from;
+  $("lvBar").style.width = nl ? ((s-prev)/(nl.from-prev)*100)+"%" : "100%";
+  const nu = nextUnlock(s);
+  $("nextTxt").textContent = nu ? `🔓 ${nu.items.map(e=>e.name).join(" & ")} in ${nu.at-s} ${nu.at-s===1?"session":"sessions"}` : "🏆 Everything unlocked";
+  $("hsStreak").textContent = `${st} ${st===1?"day":"days"}`;
+  $("routineMeta").textContent = `${list.length} exercises`;
+  $("brk").textContent = `${d.breaks} / 10`;
+  const w = $("walk"); w.setAttribute("aria-pressed", d.walk); w.textContent = d.walk ? "Done ✓" : "Mark done";
+  let ph = ""; for(let i=0;i<=10;i++) ph += `<button data-pain="${i}" style="--pc:${PAINC[i]}" aria-pressed="${d.pain===i}" aria-label="Pain ${i}">${i}</button>`;
+  $("pain").innerHTML = ph;
+
+  // New today card
+  const fresh = EXERCISES.filter(e => e.unlock === s && s > 1), grads = EXERCISES.filter(e => e.retire === s);
+  const uc = $("unlockCard");
+  if(fresh.length || grads.length || s === 1){
+    uc.hidden = false;
+    uc.innerHTML = s === 1 && !fresh.length
+      ? `<b>👋 Welcome to Level 1</b>Start gently with the hot pack and 2 exercises. Finish every exercise in a day to complete a session, and new ones unlock as you go.`
+      : `<b>🎉 ${LEVELS.some(l=>l.from===s) ? `Level ${lv.n} unlocked!` : "New today!"}</b>
+        ${fresh.length?`<ul>${fresh.map(e=>`<li>${e.name}</li>`).join("")}</ul>`:""}
+        ${grads.length?`<div style="margin-top:6px;font-size:14px">🎓 Graduated: ${grads.map(e=>e.name).join(", ")}. You've outgrown them.</div>`:""}`;
+  } else uc.hidden = true;
+
+  // Roadmap
+  $("roadBody").innerHTML = `<p style="font-size:14px;color:var(--muted);margin:0 0 10px">A session counts when you finish every exercise that day. Missed days don't rush you ahead, and a day with pain 7 or higher doesn't count, so you stay at your level until your back is ready.</p>` +
+    LEVELS.map((l,i) => { const to = LEVELS[i+1] ? LEVELS[i+1].from-1 : null;
+      const items = EXERCISES.filter(e => e.unlock >= l.from && (!to || e.unlock <= to));
+      const grads = EXERCISES.filter(e => e.retire && e.retire === l.from);
+      return `<div class="lvl-row ${lv.n===l.n?"cur":""}"><h4>${s>=l.from?"":"🔒 "}Level ${l.n} · ${l.name}<small>${to?`Sessions ${l.from}–${to}`:`Session ${l.from}+`}</small></h4><p>${l.desc}</p>
+        <div class="chiprow">${items.map(e=>`<span class="xc ${s>=e.unlock?"":"lock"}">${s>=e.unlock?"✓":"🔒"} ${e.name}${l.n===1?` · S${e.unlock}`:""}</span>`).join("")}
+        ${grads.map(e=>`<span class="xc grad">${e.name}</span>`).join("")}</div></div>`; }).join("");
+}
+function renderExercises(){
+  const d = day(selected), s = sessionInfo(selected), list = routineFor(s), all = list.every(e => (d.sets[e.id]||0) >= e.sets);
+  const nu = nextUnlock(s);
+  let top = "";
+  if(d.pain >= 7) top += `<div class="hold">Pain is high today (${d.pain}/10). Do only what feels OK, skip anything that hurts. Today won't count toward unlocking new exercises, so you stay at a safe level.</div>`;
+  if(all) top += `<div class="celebrate"><b>🎉 Session ${s} complete!</b>${d.pain>=7?"Rest well.":nu?`${nu.at-s-1<=0?"New exercises unlock next session!":`Next unlock in ${nu.at-s-1} more sessions.`}`:"You're at the top level. Keep it up!"}</div>`;
+  $("exList").innerHTML = top + list.map((e,i) => {
+    const n = d.sets[e.id]||0, done = n >= e.sets, tm = timers[e.id], isNew = e.unlock === s && s > 1;
+    let sets = ""; for(let k=1;k<=e.sets;k++) sets += `<button class="set" data-ex="${e.id}" data-set="${k}" aria-pressed="${k<=n}">${k<=n?"✓ ":""}${e.setLabel||`Set ${k}`}</button>`;
+    const tl = e.timer >= 60 && e.timer % 60 === 0 ? `${e.timer/60} min` : `${e.timer}s`;
+    return `<article class="ex ${done?"done":""}" style="--acc:${ACC[e.id]}">
+      <div class="art"><span class="tag">${i+1} of ${list.length}</span>${done?'<span class="doneb">✓ Done</span>':isNew?'<span class="new-badge">✨ New</span>':""}${FIG(e.id, ACC[e.id])}</div>
+      <div class="ex-body"><span class="src">${e.src==="b"?"Physio plan":"Leg strength"}</span><h3>${e.name}</h3><div class="dose">${doseFor(e,s)}</div><div class="works">${e.works}</div>
+        <div class="sets">${sets}</div>
+        <button class="timer ${tm?"running":""}" data-timer="${e.id}">${tm?`⏱ ${fmt(tm.left)} · tap to stop`:`⏱ ${e.timerLabel} timer · ${tl}`}</button>
+        <details class="how"><summary>How to do it</summary>
+          <ol>${e.steps.map(x=>`<li><span>${x}</span></li>`).join("")}</ol>
+          <div class="tip">⚠️ ${e.caution}</div>${e.next?`<div class="nexts">⬆️ ${e.next}</div>`:""}</details>
+      </div></article>`;
+  }).join("") + `<article class="ex ${d.walk?"done":""}" style="--acc:${ACC.walk}">
+      <div class="art"><span class="tag">Daily</span>${d.walk?'<span class="doneb">✓ Done</span>':""}${FIG("walk", ACC.walk)}</div>
+      <div class="ex-body"><span class="src">Every day</span><h3>Easy walk</h3><div class="dose">20–30 minutes</div><div class="works">Circulation, nerve mobility, less stiffness</div>
+        <div class="sets"><button class="set" data-act="walk" aria-pressed="${d.walk}">${d.walk?"✓ Walk done":"Mark walk as done"}</button></div>
+        <details class="how"><summary>How to do it</summary><ol>
+          <li><span>Walk at a pace where you can still talk comfortably.</span></li>
+          <li><span>Stand tall, let your arms swing naturally, take normal-length steps.</span></li>
+          <li><span>Split it into two 15-minute walks if that's easier on your back.</span></li></ol>
+          <div class="tip">⚠️ Flat ground and cushioned shoes are best while your back settles.</div></details>
+      </div></article>`;
+}
+const fmt = t => t >= 60 ? `${Math.floor(t/60)}:${pad(t%60)}` : `${t}s`;
+const AVC = ["#FF6B4A","#16B29A","#6A4BE0","#E08A00","#F0457E","#2F7FE0"];
+function avatar(name){ const c = AVC[[...name].reduce((a,ch)=>a+ch.charCodeAt(0),0)%AVC.length]; return `<span class="av" style="background:${c}">${esc(name.trim()[0]||"P").toUpperCase()}</span>`; }
+function renderFood(){
+  const d = day(selected), g = protein(d);
+  $("pNum").innerHTML = `${g}<small> / ${TARGET} g</small>`;
+  $("pBar").style.width = Math.min(100,g/TARGET*100)+"%";
+  $("pMsg").textContent = g >= TARGET ? "🎉 Goal reached, well done!" : g === 0 ? "Let's fuel those legs 💪" : `${r1(TARGET-g)} g to go`;
+  const rows = [];
+  for(const [id,n] of Object.entries(d.food)) if(FOOD[id]) rows.push(`<li>${avatar(FOOD[id].n)}<div class="nm">${FOOD[id].n}<span>${n} × ${FOOD[id].s}</span></div><div class="g">${r1(FOOD[id].g*n)} g</div><button class="rm" data-rmf="${id}" aria-label="Remove one ${FOOD[id].n}">−</button></li>`);
+  d.custom.forEach((c,i) => rows.push(`<li>${avatar(c.n||"Protein")}<div class="nm">${esc(c.n||"Protein")}${c.t?`<span>${c.t}</span>`:""}</div><div class="g">${c.g} g</div><button class="rm" data-rmc="${i}" aria-label="Remove">×</button></li>`));
+  $("log").innerHTML = rows.length ? rows.reverse().join("") : `<p class="empty">🍽️ Nothing logged yet.<br>Add grams above after you eat.</p>`;
+}
+function renderStatic(){
+  $("foods").innerHTML = FOODS.map(c => `<div class="fcat">${c.cat}</div>` + c.items.map(([id,n,s,gr]) =>
+    `<button class="fitem" data-food="${id}"><span class="nm">${n}<span>${s}</span></span><span class="g">${gr} g</span><span class="plus">+</span></button>`).join("")).join("");
+  $("meals").innerHTML = MEALS.map((m,i) => { const tot = m.items.reduce((a,[id,n]) => a+FOOD[id].g*n,0);
+    return `<div class="meal"><div class="nm"><span>${m.when}</span><b>${m.name} · ${tot} g</b><span>${m.items.map(([id,n])=>(n>1?n+" ":"")+FOOD[id].n).join(", ")}</span></div><button data-meal="${i}">Add</button></div>`; }).join("");
+}
+function renderAll(){ renderTop(); renderExTop(); renderExercises(); renderFood(); }
+function refresh(ex){ renderTop(); renderExTop(); renderFood(); if(ex) renderExercises(); }
+
+function toggleTimer(id){
+  const e = EXERCISES.find(x => x.id === id);
+  if(timers[id]){ clearInterval(timers[id].iv); delete timers[id]; renderExercises(); return; }
+  timers[id] = {left:e.timer};
+  timers[id].iv = setInterval(() => { const t = timers[id]; if(!t) return; t.left--;
+    const b = document.querySelector(`[data-timer="${id}"]`);
+    if(t.left <= 0){ clearInterval(t.iv); delete timers[id]; if(navigator.vibrate) navigator.vibrate([200,100,200]); beep(); toast(`⏰ ${e.name}: time's up`);
+      if(b) renderExercises(); }
+    else if(b) b.textContent = `⏱ ${fmt(t.left)} · tap to stop`; },1000);
+  renderExercises();
+}
+function beep(){ try { const a = new (window.AudioContext||window.webkitAudioContext)(), o = a.createOscillator(), g = a.createGain();
+  o.frequency.value = 880; o.connect(g); g.connect(a.destination); g.gain.setValueAtTime(.15,a.currentTime);
+  g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.6); o.start(); o.stop(a.currentTime+.6); } catch(e){} }
+
+const gIn = $("gIn"), nIn = $("nIn"), addBtn = $("addBtn");
+const syncBtn = () => { const v = Number(gIn.value); addBtn.disabled = !(v > 0); addBtn.textContent = v > 0 ? `Add ${r1(v)} g to today` : "Add to today"; };
+gIn.addEventListener("input", syncBtn);
+$("addForm").addEventListener("submit", ev => {
+  ev.preventDefault(); const g = r1(Number(gIn.value)); if(!(g > 0)) return;
+  day(selected).custom.push({n: nIn.value.trim() || "Protein", g, t: new Date().toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"})});
+  gIn.value = ""; nIn.value = ""; syncBtn(); gIn.blur(); nIn.blur();
+  persist(selected); refresh(false); toast(`✓ Added ${g} g`);
+});
+
+document.addEventListener("click", ev => {
+  if(ev.target.id === "sheet"){ $("sheet").hidden = true; return; }
+  const b = ev.target.closest("button"); if(!b) return;
+  if(b.id === "resetOpen"){ $("sheet").hidden = false; return; }
+  if(b.dataset.reset){
+    const mode = b.dataset.reset; $("sheet").hidden = true;
+    if(mode === "no") return;
+    Object.values(timers).forEach(t => clearInterval(t.iv)); for(const k in timers) delete timers[k];
+    const keys = Object.keys(days);
+    if(mode === "all"){
+      days = {}; saveLocal();
+      if(dbCol) keys.forEach(k => { dirty.delete(k); dbCol.doc(k).delete().catch(()=>{}); });
+    } else {
+      keys.forEach(k => { const d = day(k); d.sets = {}; d.walk = false; d.breaks = 0; d.pain = null; persist(k); });
+    }
+    selected = todayKey(); renderAll(); window.scrollTo({top:0}); toast("↺ Back to Level 1, session 1");
+    return;
+  }
+  const d = day(selected);
+  if(b.classList.contains("tab")){
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t===b));
+    $("p-ex").hidden = b.id !== "t-ex"; $("p-food").hidden = b.id !== "t-food"; window.scrollTo({top:0}); return; }
+  if(b.dataset.q){ gIn.value = r1((Number(gIn.value)||0) + Number(b.dataset.q)); syncBtn(); return; }
+  if(b.dataset.day){ selected = b.dataset.day; renderAll(); return; }
+  if(b.dataset.timer){ toggleTimer(b.dataset.timer); return; }
+  let ex = false;
+  if(b.dataset.ex){ const s = Number(b.dataset.set), cur = d.sets[b.dataset.ex]||0; d.sets[b.dataset.ex] = cur === s ? s-1 : s; ex = true;
+    const e = EXERCISES.find(x=>x.id===b.dataset.ex); if(d.sets[e.id] >= e.sets && cur < e.sets) toast(`💪 ${e.name} done!`); }
+  else if(b.dataset.act === "walk"){ d.walk = !d.walk; ex = true; }
+  else if(b.dataset.act === "brk+") d.breaks = Math.min(30, d.breaks+1);
+  else if(b.dataset.act === "brk-") d.breaks = Math.max(0, d.breaks-1);
+  else if(b.dataset.pain){ const p = Number(b.dataset.pain); d.pain = d.pain === p ? null : p; ex = true; }
+  else if(b.dataset.food){ const id = b.dataset.food; d.food[id] = (d.food[id]||0)+1; toast(`✓ ${FOOD[id].n} · ${FOOD[id].g} g`); }
+  else if(b.dataset.rmf){ const id = b.dataset.rmf; d.food[id]--; if(d.food[id] <= 0) delete d.food[id]; }
+  else if(b.dataset.rmc){ d.custom.splice(Number(b.dataset.rmc),1); }
+  else if(b.dataset.meal){ const m = MEALS[b.dataset.meal]; m.items.forEach(([id,n]) => d.food[id] = (d.food[id]||0)+n); toast(`✓ Added ${m.name}`); }
+  else return;
+  persist(selected); refresh(ex);
+});
+
+renderStatic(); renderAll();
+
+(async () => {
+  if(!window.claude || !window.claude.use){ saveEl.textContent = "Saved on this phone"; return; }
+  try {
+    const [user, db] = await Promise.all([window.claude.use("user"), window.claude.use("db")]);
+    const uid = user ? await user.id() : null;
+    if(!db || !uid){ saveEl.textContent = "Saved on this phone"; return; }
+    dbCol = db.doc(`data/users/${uid}/profile`).collection("days");
+    const snap = await dbCol.orderBy("date","desc").limit(200).get();
+    const remote = new Set(snap.docs.map(s => s.id));
+    Object.keys(days).forEach(k => { if(!remote.has(k)) dirty.add(k); });
+    if(dirty.size) flush();
+    dbCol.orderBy("date","desc").limit(200).onSnapshot(qs => {
+      qs.docs.forEach(s => { if(s.exists && !dirty.has(s.id)) days[s.id] = JSON.parse(JSON.stringify(s.data())); });
+      saveLocal(); refresh(!document.querySelector(".timer.running"));
+      saveEl.textContent = "✓ Synced to your account";
+    }, () => { saveEl.textContent = "Saved on this phone"; });
+  } catch(e){ saveEl.textContent = "Saved on this phone"; }
+})();
+})();
+</script>
+</body>
+</html>
